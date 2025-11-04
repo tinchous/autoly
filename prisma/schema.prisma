@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily // ─────────────────────────────────────────────
+// BASE DE DATOS NEON – 200 productos máximo
+// ─────────────────────────────────────────────
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. Producto (máx 200)
+model Product {
+  id       Int    @id @default(autoincrement())
+  name     String
+  price    Float
+  category String
+  image    String?
+  stock    Int    @default(99)
+}
+
+// 2. Pedido (llega por WhatsApp)
+model Order {
+  id         Int      @id @default(autoincrement())
+  nickname   String
+  address    String
+  payment    String   // "efectivo" | "debito"
+  note       String?
+  total      Float
+  delivery   Int      // 50 o 0
+  items      Json     // [{id:1, qty:2}]
+  status     String   @default("recibido") // recibido → preparando → en-camino → entregado
+  channel    String   @default("web")
+  createdAt  DateTime @default(now())
+}with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
