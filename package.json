@@ -30,3 +30,14 @@
     "seed": "tsx prisma/seed.ts"
   }
 }
+// package.json - agregar scripts
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "deploy": "git add . && git commit -m 'Deploy' && git push && vercel --prod"
+  }
+}

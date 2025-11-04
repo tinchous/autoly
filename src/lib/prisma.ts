@@ -1,3 +1,4 @@
+// src/lib/prisma.ts - Optimizado para producción
 import { PrismaClient } from '@prisma/client'
 
 const globalForPrisma = globalThis as unknown as {
