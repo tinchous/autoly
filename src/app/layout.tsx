@@ -1,6 +1,3 @@
-// ─────────────────────────────────────────────
-// LAYOUT GLOBAL – NEGRO + NEÓN
-// ─────────────────────────────────────────────
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
