@@ -1,17 +1,17 @@
 {
-  "name": "autoliya",
-  "version": "0.1.0",
+  "name": "autoservice-liam-yahir",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@prisma/client": "^6.18.0",
+    "@prisma/client": "^5.22.0",
     "@tailwindcss/postcss": "^4.1.16",
     "autoprefixer": "^10.4.21",
     "next": "16.0.1",
@@ -23,21 +23,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "prisma": "^6.18.0",
-    "tsx": "^4.20.6"
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.2"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
-  }
-}
-// package.json - agregar scripts
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "deploy": "git add . && git commit -m 'Deploy' && git push && vercel --prod"
   }
 }
