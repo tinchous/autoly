@@ -1,9 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* REFERENCIA OBLIGATORIA: sin esto NO reconoce bg-gray-500 */
-@reference "tailwindcss";
-
-/* COLORES DEL LOCAL */
+/* COLORES DEL LOCAL + NEÓN */
 @layer base {
   :root {
     --black: #000000;
@@ -15,14 +14,32 @@
 
 /* BORDES NEÓN */
 .neon {
-  @apply border-2 border-[#FF00FF];
-  box-shadow: 0 0 15px #FF00FF, 0 0 30px #FF00FF;
+  border: 2px solid var(--neon);
+  box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.neon:hover { @apply scale-105; }
+.neon:hover { transform: scale(1.05); }
 
-/* ESTADOS DE PEDIDO (ahora 100% FUNCIONAN) */
-.status-recibido     { @apply bg-gray-500; }
-.status-preparando   { @apply bg-yellow-500; }
-.status-en-camino    { @apply bg-orange-500; }
-.status-entregado    { @apply bg-green-500; }
+/* BADGES NEÓN */
+.badge {
+  background: var(--fire);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin: 0.25rem;
+  box-shadow: 0 0 10px var(--fire);
+}
+
+/* ESTADOS DE PEDIDO */
+.status-recibido   { background: gray; }
+.status-preparando { background: yellow; }
+.status-en-camino  { background: orange; }
+.status-entregado  { background: green; }
+
+/* LINE CLAMP PARA TEXTOS */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
