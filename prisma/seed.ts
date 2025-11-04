@@ -1,4 +1,4 @@
-// prisma/seed.ts - VERSIÓN SIN DESCRIPCION
+// prisma/seed.ts - VERSIÓN MÍNIMA
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -10,34 +10,28 @@ const PRODUCTOS = [
     precio: 890,
     imagen: "/products/pollo-spiedo.jpg",
     categoria: "Rotisería",
-    subcategoria: "Pollos",
     stock: 15,
     oferta: true,
-    nuevo: false,
     mas_vendido: true
   },
   {
     id: 2,
-    nombre: "Pizza Familiar",
+    nombre: "Pizza Familiar", 
     precio: 650,
     imagen: "/products/pizza-familiar.jpg",
-    categoria: "Rotisería", 
-    subcategoria: "Pizzas",
+    categoria: "Rotisería",
     stock: 20,
     oferta: false,
-    nuevo: true,
     mas_vendido: true
   },
   {
-    id: 3, 
+    id: 3,
     nombre: "Manzana Roja Kg",
     precio: 120,
-    imagen: "/products/manzana-roja.jpg",
+    imagen: "/products/manzana-roja.jpg", 
     categoria: "Frutas",
-    subcategoria: "Frutas",
     stock: 50,
     oferta: true,
-    nuevo: false,
     mas_vendido: true
   },
   {
@@ -45,11 +39,9 @@ const PRODUCTOS = [
     nombre: "Tomate Kg",
     precio: 95,
     imagen: "/products/tomate.jpg",
-    categoria: "Frutas",
-    subcategoria: "Verduras",
+    categoria: "Frutas", 
     stock: 40,
     oferta: false,
-    nuevo: true,
     mas_vendido: false
   },
   {
@@ -58,10 +50,8 @@ const PRODUCTOS = [
     precio: 120,
     imagen: "/products/coca-cola.jpg",
     categoria: "Bebidas",
-    subcategoria: "Gaseosas",
     stock: 50,
-    oferta: true,
-    nuevo: false,
+    oferta: true, 
     mas_vendido: true
   },
   {
@@ -70,44 +60,28 @@ const PRODUCTOS = [
     precio: 85,
     imagen: "/products/pan-molde.jpg",
     categoria: "Almacén",
-    subcategoria: "Panadería",
     stock: 30,
     oferta: false,
-    nuevo: true,
     mas_vendido: false
   }
 ];
 
 async function main() {
-  console.log('🌱 Sembrando base de datos Autoservice Liam Yahir...');
+  console.log('🌱 Sembrando base de datos...');
   
-  // Limpiar datos existentes
-  await prisma.cartItem.deleteMany();
-  await prisma.cart.deleteMany();
+  // Solo limpiar productos y voice orders (no hay cart)
   await prisma.voiceOrder.deleteMany();
   await prisma.product.deleteMany();
   
-  // Crear productos SIN descripcion
+  // Crear productos simples
   for (const product of PRODUCTOS) {
     await prisma.product.create({
-      data: {
-        id: product.id,
-        nombre: product.nombre,
-        // descripcion: product.descripcion, // ← REMOVIDO
-        precio: product.precio,
-        imagen: product.imagen,
-        categoria: product.categoria,
-        subcategoria: product.subcategoria,
-        stock: product.stock,
-        oferta: product.oferta,
-        nuevo: product.nuevo,
-        mas_vendido: product.mas_vendido
-      }
+      data: product
     });
   }
   
-  console.log(`✅ ${PRODUCTOS.length} productos creados en Neon!`);
-  console.log('📍 Rotisería, Frutas, Bebidas y Almacén listos!');
+  console.log(`✅ ${PRODUCTOS.length} productos creados!`);
+  console.log('🍗 Rotisería, 🍎 Frutas, 🥤 Bebidas, 🛒 Almacén');
 }
 
 main()
