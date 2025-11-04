@@ -4,8 +4,18 @@ import FixedFilterBar from "@/components/FixedFilterBar";
 
 export const dynamic = "force-dynamic";
 
+type Product = {
+  id: number;
+  nombre: string;
+  precio: number;
+  imagen: string;
+  oferta: boolean;
+  nuevo: boolean;
+  mas_vendido: boolean;
+};
+
 export default async function ProductsPage() {
-  const products = await prisma.product.findMany();
+  const products: Product[] = await prisma.product.findMany();
 
   return (
     <>
@@ -15,7 +25,7 @@ export default async function ProductsPage() {
           🔥 TODOS LOS PRODUCTOS 🔥
         </h1>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {products.map(p => (
+          {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
