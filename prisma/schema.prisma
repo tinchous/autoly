@@ -1,3 +1,4 @@
+// prisma/schema.prisma - SCHEMA COMPLETO Y CORRECTO
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,31 +9,30 @@ datasource db {
 }
 
 model Product {
-  id           Int      @id @default(autoincrement())
-  nombre       String
-  descripcion  String?
-  precio       Float
-  imagen       String
-  categoria    String
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  precio      Float
+  imagen      String
+  categoria   String
   subcategoria String
-  stock        Int      @default(0)
-  oferta       Boolean  @default(false)
-  nuevo        Boolean  @default(true)
-  mas_vendido  Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  stock       Int      @default(0)
+  oferta      Boolean  @default(false)
+  nuevo       Boolean  @default(true)
+  mas_vendido Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  // Relaciones
-  cartItems CartItem[]
+  cartItems   CartItem[]
 
   @@map("products")
 }
 
 model Cart {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   items     CartItem[]
-  sessionId String     @unique
-  createdAt DateTime   @default(now())
+  sessionId String    @unique
+  createdAt DateTime  @default(now())
 
   @@map("carts")
 }
