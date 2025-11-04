@@ -1,45 +1,79 @@
-import { create } from "zustand";
+// src/hooks/useCart.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-type Product = { id: number; nombre: string; precio: number };
-type CartItem = Product & { qty: number };
+interface CartItem {
+  id: number;
+  nombre: string;
+  precio: number;
+  imagen: string;
+  qty: number;
+}
 
-type CartStore = {
+interface CartStore {
   items: CartItem[];
-  add: (p: Product) => void;
+  add: (product: any) => void;
   remove: (id: number) => void;
   updateQty: (id: number, qty: number) => void;
   clear: () => void;
+  getQty: (id: number) => number;
   total: number;
-  getQty: (id: number) => number;   // ← LA LÍNEA MÁGICA
-};
+}
 
-export const useCart = create<CartStore>((set, get) => ({
-  items: [],
-  total: 0,
+export const useCart = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      add: (product) => {
+        const { items } = get();
+        const existing = items.find(item => item.id === product.id);
 
-  add: (p) => set((s) => {
-    const exists = s.items.find(i => i.id === p.id);
-    const newItems = exists
-      ? s.items.map(i => i.id === p.id ? { ...i, qty: i.qty + 1 } : i)
-      : [...s.items, { ...p, qty: 1 }];
-    return { items: newItems, total: newItems.reduce((t, i) => t + i.precio * i.qty, 0) };
-  }),
+        if (existing) {
+          set({
+            items: items.map(item =>
+              item.id === product.id
+                ? { ...item, qty: item.qty + 1 }
+                : item
+            )
+          });
+        } else {
+          set({ items: [...items, { ...product, qty: 1 }] });
+        }
 
-  remove: (id) => set((s) => {
-    const newItems = s.items
-      .map(i => i.id === id ? { ...i, qty: i.qty - 1 } : i)
-      .filter(i => i.qty > 0);
-    return { items: newItems, total: newItems.reduce((t, i) => t + i.precio * i.qty, 0) };
-  }),
-
-  updateQty: (id, qty) => set((s) => {
-    const newItems = qty <= 0
-      ? s.items.filter(i => i.id !== id)
-      : s.items.map(i => i.id === id ? { ...i, qty } : i);
-    return { items: newItems, total: newItems.reduce((t, i) => t + i.precio * i.qty, 0) };
-  }),
-
-  clear: () => set({ items: [], total: 0 }),
-
-  getQty: (id) => get().items.find(i => i.id === id)?.qty || 0,   // ← IMPLEMENTACIÓN
-}));
+        // Disparar evento para actualizar iconos
+        window.dispatchEvent(new Event('cartUpdated'));
+      },
+      remove: (id) => {
+        const { items } = get();
+        set({ items: items.filter(item => item.id !== id) });
+        window.dispatchEvent(new Event('cartUpdated'));
+      },
+      updateQty: (id, qty) => {
+        const { items } = get();
+        if (qty <= 0) {
+          get().remove(id);
+          return;
+        }
+        set({
+          items: items.map(item =>
+            item.id === id ? { ...item, qty } : item
+          )
+        });
+        window.dispatchEvent(new Event('cartUpdated'));
+      },
+      clear: () => {
+        set({ items: [] });
+        window.dispatchEvent(new Event('cartUpdated'));
+      },
+      getQty: (id) => {
+        return get().items.find(item => item.id === id)?.qty || 0;
+      },
+      get total() {
+        return get().items.reduce((sum, item) => sum + (item.precio * item.qty), 0);
+      }
+    }),
+    {
+      name: 'cart-storage',
+    }
+  )
+);
