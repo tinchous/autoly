@@ -1,6 +1,7 @@
-// src/app/layout.tsx - VERSIÓN MÍNIMA Y SEGURA
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import CartIcon from "@/components/CartIcon";
 
 export const metadata: Metadata = {
   title: "Autoservice Liam Yahir",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="bg-gray-900 text-white">
+        <Navbar />
         {children}
+        <CartIcon />
       </body>
     </html>
   );

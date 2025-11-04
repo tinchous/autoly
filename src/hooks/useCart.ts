@@ -1,4 +1,3 @@
-// src/hooks/useCart.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -39,13 +38,10 @@ export const useCart = create<CartStore>()(
         } else {
           set({ items: [...items, { ...product, qty: 1 }] });
         }
-        
-        window.dispatchEvent(new Event('cartUpdated'));
       },
       remove: (id) => {
         const { items } = get();
         set({ items: items.filter(item => item.id !== id) });
-        window.dispatchEvent(new Event('cartUpdated'));
       },
       updateQty: (id, qty) => {
         const { items } = get();
@@ -58,15 +54,9 @@ export const useCart = create<CartStore>()(
             item.id === id ? { ...item, qty } : item
           )
         });
-        window.dispatchEvent(new Event('cartUpdated'));
       },
-      clear: () => {
-        set({ items: [] });
-        window.dispatchEvent(new Event('cartUpdated'));
-      },
-      getQty: (id) => {
-        return get().items.find(item => item.id === id)?.qty || 0;
-      },
+      clear: () => set({ items: [] }),
+      getQty: (id) => get().items.find(item => item.id === id)?.qty || 0,
       get total() {
         return get().items.reduce((sum, item) => sum + (item.precio * item.qty), 0);
       }
@@ -74,7 +64,6 @@ export const useCart = create<CartStore>()(
     {
       name: 'autoly-cart',
       storage: createJSONStorage(() => {
-        // Solo usar localStorage en el cliente
         if (typeof window !== 'undefined') {
           return localStorage;
         }

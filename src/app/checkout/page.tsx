@@ -1,65 +1,39 @@
-// src/app/checkout/page.tsx - VERSIÓN CORRECTA
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCart } from "@/hooks/useCart";
-
-interface CheckoutForm {
-  nickname: string;
-  address: string;
-  payment: string;
-  phone: string;
-}
 
 export default function Checkout() {
   const { items, total, clear } = useCart();
-  const [form, setForm] = useState<CheckoutForm>({
+  const [form, setForm] = useState({
     nickname: "",
-    address: "",
+    address: "", 
     payment: "efectivo",
     phone: ""
   });
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mounted || items.length === 0) return;
-
-    const message = `🛒 PEDIDO AUTOSERVICE LIAM YAHIR\n\n${items.map(item =>
+    if (items.length === 0) return;
+    
+    const message = `🛒 PEDIDO AUTOSERVICE LIAM YAHIR\n\n${items.map(item => 
       `${item.qty}x ${item.nombre} - $${item.precio * item.qty}`
     ).join('\n')}\n\n📦 TOTAL: $${total}\n👤 ${form.nickname}\n📍 ${form.address}\n📞 ${form.phone || 'No especificado'}\n💳 Pago: ${form.payment}`;
-
+    
     const whatsappUrl = `https://wa.me/59892308828?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     clear();
   };
 
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-green-900 pt-20">
-        <div className="max-w-2xl mx-auto p-8 bg-green-800 rounded-2xl">
-          <div className="animate-pulse">
-            <div className="h-8 bg-green-700 rounded mb-4"></div>
-            <div className="h-4 bg-green-700 rounded mb-2"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-green-900 pt-20">
       <div className="max-w-2xl mx-auto p-8 bg-green-800 border border-yellow-500 rounded-2xl">
         <h1 className="text-3xl font-black text-yellow-400 mb-6">🚀 FINALIZAR PEDIDO</h1>
-
+        
         {items.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-green-200 text-xl mb-4">Tu carrito está vacío</p>
-            <a
-              href="/products"
+            <a 
+              href="/products" 
               className="bg-yellow-500 text-green-900 px-6 py-3 rounded-full font-bold hover:bg-yellow-400 transition inline-block"
             >
               Ir a Productos
@@ -84,38 +58,37 @@ export default function Checkout() {
 
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="space-y-6">
-              <input
-                placeholder="Apodo o Nombre"
-                required
+              <input 
+                placeholder="Apodo o Nombre" 
+                required 
                 className="w-full p-4 bg-green-900 border border-yellow-500 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                 value={form.nickname}
                 onChange={e => setForm({ ...form, nickname: e.target.value })}
               />
-
-              <input
-                placeholder="Calle · N° · Apto · Esq · Barrio"
-                required
+              
+              <input 
+                placeholder="Calle · N° · Apto · Esq · Barrio" 
+                required 
                 className="w-full p-4 bg-green-900 border border-yellow-500 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                 value={form.address}
                 onChange={e => setForm({ ...form, address: e.target.value })}
               />
-
-              <input
-                placeholder="Teléfono (opcional)"
+              
+              <input 
+                placeholder="Teléfono (opcional)" 
                 className="w-full p-4 bg-green-900 border border-yellow-500 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                 value={form.phone}
                 onChange={e => setForm({ ...form, phone: e.target.value })}
               />
 
-              {/* Método de Pago */}
               <div className="space-y-4">
                 <label className="block text-white font-medium mb-2">Método de Pago</label>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="pay"
-                      value="efectivo"
+                    <input 
+                      type="radio" 
+                      name="pay" 
+                      value="efectivo" 
                       checked={form.payment === "efectivo"}
                       onChange={e => setForm({ ...form, payment: e.target.value })}
                       className="text-yellow-500 focus:ring-yellow-500"
@@ -123,10 +96,10 @@ export default function Checkout() {
                     <span className="text-white">Efectivo</span>
                   </label>
                   <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="pay"
-                      value="debito"
+                    <input 
+                      type="radio" 
+                      name="pay" 
+                      value="debito" 
                       checked={form.payment === "debito"}
                       onChange={e => setForm({ ...form, payment: e.target.value })}
                       className="text-yellow-500 focus:ring-yellow-500"
@@ -136,7 +109,7 @@ export default function Checkout() {
                 </div>
               </div>
 
-              <button
+              <button 
                 type="submit"
                 className="w-full bg-yellow-500 text-green-900 py-4 rounded-full font-bold text-lg hover:bg-yellow-400 transition-all"
               >

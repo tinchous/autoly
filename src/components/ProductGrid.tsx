@@ -1,4 +1,3 @@
-// src/components/ProductGrid.tsx
 "use client";
 import { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
@@ -16,7 +15,7 @@ interface Product {
 
 interface ProductGridProps {
   category?: string;
-  products?: Product[]; // ← NUEVA prop opcional
+  products?: Product[];
 }
 
 export default function ProductGrid({ category, products: externalProducts }: ProductGridProps) {
@@ -24,38 +23,15 @@ export default function ProductGrid({ category, products: externalProducts }: Pr
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        // Si se pasan productos externos, usarlos directamente
-        if (externalProducts) {
-          setProducts(externalProducts);
-          setLoading(false);
-          return;
-        }
+    // Si se pasan productos externos, usarlos directamente
+    if (externalProducts && externalProducts.length > 0) {
+      setProducts(externalProducts);
+      setLoading(false);
+      return;
+    }
 
-        // Si no, fetch desde la API
-        const url = category === 'mas_vendido'
-          ? '/api/products?mas_vendido=true'
-          : '/api/products';
-
-        const response = await fetch(url);
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        // Fallback a datos mock
-        setProducts(getMockProducts(category));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [category, externalProducts]);
-
-  // Datos mock de respaldo
-  const getMockProducts = (cat?: string): Product[] => {
-    const mockProducts = [
+    // Si no, usar datos mock basados en la categoría
+    const mockProducts: Product[] = [
       {
         id: 1,
         nombre: "Pollo al Spiedo",
@@ -118,12 +94,17 @@ export default function ProductGrid({ category, products: externalProducts }: Pr
       }
     ];
 
-    if (cat === 'mas_vendido') {
-      return mockProducts.filter(p => p.mas_vendido);
+    let filteredProducts = mockProducts;
+    
+    if (category === 'mas_vendido') {
+      filteredProducts = mockProducts.filter(p => p.mas_vendido);
+    } else if (category && category !== 'TODAS') {
+      filteredProducts = mockProducts.filter(p => p.categoria === category);
     }
 
-    return mockProducts;
-  };
+    setProducts(filteredProducts);
+    setLoading(false);
+  }, [category, externalProducts]);
 
   if (loading) {
     return (
