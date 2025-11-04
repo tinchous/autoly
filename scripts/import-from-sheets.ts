@@ -1,58 +1,89 @@
-// scripts/import-from-sheets.ts
+// scripts/import-from-sheets.ts - VERSIÓN ACTUALIZADA
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Datos mock basados en tu Google Sheets
-const PRODUCTOS = [
-  {
-    id: 1,
-    nombre: "Coca Cola 2L",
-    descripcion: "Bebida cola 2 litros",
-    precio: 120,
-    imagen: "/products/coca-cola.jpg",
-    categoria: "Bebidas",
-    subcategoria: "Gaseosas",
-    stock: 50,
-    oferta: true,
-    nuevo: false,
-    mas_vendido: true
-  },
-  {
-    id: 2,
-    nombre: "Pan de Molde Integral",
-    descripcion: "Pan de molde integral",
-    precio: 85,
-    imagen: "/products/pan-molde.jpg",
-    categoria: "Almacén",
-    subcategoria: "Panadería",
-    stock: 30,
-    oferta: false,
-    nuevo: true,
-    mas_vendido: false
-  },
-  // Agregar más productos según tu Google Sheets...
-];
+async function importData() {
+  console.log('📥 Importando datos...');
 
-async function main() {
-  console.log('🌱 Sembrando base de datos...');
-
-  // Limpiar datos existentes
-  await prisma.cartItem.deleteMany();
-  await prisma.cart.deleteMany();
+  // SOLO limpiar tablas que existen en el schema mínimo
   await prisma.voiceOrder.deleteMany();
   await prisma.product.deleteMany();
 
-  // Crear productos
-  for (const product of PRODUCTOS) {
+  // Productos de ejemplo para Autoservice Liam Yahir
+  const productos = [
+    {
+      id: 1,
+      nombre: "Pollo al Spiedo",
+      precio: 890,
+      imagen: "/products/pollo-spiedo.jpg",
+      categoria: "Rotisería",
+      stock: 15,
+      oferta: true,
+      mas_vendido: true
+    },
+    {
+      id: 2,
+      nombre: "Pizza Familiar",
+      precio: 650,
+      imagen: "/products/pizza-familiar.jpg",
+      categoria: "Rotisería",
+      stock: 20,
+      oferta: false,
+      mas_vendido: true
+    },
+    {
+      id: 3,
+      nombre: "Manzana Roja Kg",
+      precio: 120,
+      imagen: "/products/manzana-roja.jpg",
+      categoria: "Frutas",
+      stock: 50,
+      oferta: true,
+      mas_vendido: true
+    },
+    {
+      id: 4,
+      nombre: "Tomate Kg",
+      precio: 95,
+      imagen: "/products/tomate.jpg",
+      categoria: "Frutas",
+      stock: 40,
+      oferta: false,
+      mas_vendido: false
+    },
+    {
+      id: 5,
+      nombre: "Coca Cola 2L",
+      precio: 120,
+      imagen: "/products/coca-cola.jpg",
+      categoria: "Bebidas",
+      stock: 50,
+      oferta: true,
+      mas_vendido: true
+    },
+    {
+      id: 6,
+      nombre: "Pan de Molde Integral",
+      precio: 85,
+      imagen: "/products/pan-molde.jpg",
+      categoria: "Almacén",
+      stock: 30,
+      oferta: false,
+      mas_vendido: false
+    }
+  ];
+
+  // Insertar productos
+  for (const producto of productos) {
     await prisma.product.create({
-      data: product
+      data: producto
     });
   }
 
-  console.log(`✅ ${PRODUCTOS.length} productos creados en Neon!`);
+  console.log(`✅ ${productos.length} productos importados!`);
 }
 
-main()
+importData()
   .catch(console.error)
   .finally(() => prisma.$disconnect());

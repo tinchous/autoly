@@ -13,22 +13,23 @@ export default function ClientProvider({
     setMounted(true);
   }, []);
 
-  // Evitar renderizado diferente entre servidor/cliente
   if (!mounted) {
     return (
-      <div style={{
-        backgroundColor: '#111827',
-        color: 'white',
-        minHeight: '100vh'
-      }}>
-        {/* Loading simple */}
-        <div style={{
+      <div
+        role="status"
+        aria-label="Cargando Autoservice Liam Yahir"
+        style={{
+          backgroundColor: '#111827',
+          color: 'white',
+          minHeight: '100vh',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}>
-          Cargando Autoly...
+          alignItems: 'center'
+        }}
+      >
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Autoservice Liam Yahir</h1>
+          <p>Cargando...</p>
         </div>
       </div>
     );

@@ -1,11 +1,10 @@
-// src/app/layout.tsx
+// src/app/layout.tsx - VERSIÓN MÍNIMA Y SEGURA
 import type { Metadata } from "next";
 import "./globals.css";
-import ClientProvider from "@/providers/ClientProvider";
 
 export const metadata: Metadata = {
-  title: "Autoservice Liam Yahir - Delivery 24/7",
-  description: "Supermercado, Almacén, Kiosko, Rotisería, Frutas & Verduras. Delivery rápido en tu zona.",
+  title: "Autoservice Liam Yahir",
+  description: "Supermercado y Delivery",
 };
 
 export default function RootLayout({
@@ -16,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="bg-gray-900 text-white">
-        <ClientProvider>
-          {children}
-        </ClientProvider>
+        {children}
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-// src/app/products/page.tsx
+// src/app/products/page.tsx - VERSIÓN CORREGIDA
 "use client";
 import { useEffect, useState } from 'react';
 import ProductGrid from '@/components/ProductGrid';
@@ -8,7 +8,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const categories = ['TODAS', 'Bebidas', 'Almacén', 'Rotisería', 'Frutas'];
+  const categories = ['TODAS', 'Rotisería', 'Frutas', 'Bebidas', 'Almacén', 'Kiosko'];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,6 +22,8 @@ export default function ProductsPage() {
         setProducts(data);
       } catch (error) {
         console.error('Error:', error);
+        // En caso de error, products será manejado por ProductGrid internamente
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -45,8 +47,8 @@ export default function ProductsPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-6 py-3 rounded-full font-bold transition ${
                 selectedCategory === cat
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  ? 'bg-yellow-500 text-green-900'
+                  : 'bg-green-800 text-green-200 hover:bg-green-700'
               }`}
             >
               {cat}
@@ -54,15 +56,17 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        {/* Productos */}
+        {/* Productos - Pasar los productos fetchados o dejar que ProductGrid maneje */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="bg-gray-800 rounded-2xl h-64 animate-pulse"></div>
             ))}
           </div>
-        ) : (
+        ) : products.length > 0 ? (
           <ProductGrid products={products} />
+        ) : (
+          <ProductGrid category={selectedCategory === 'TODAS' ? undefined : selectedCategory} />
         )}
       </div>
     </div>
