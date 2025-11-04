@@ -1,4 +1,3 @@
-// prisma/schema.prisma - SCHEMA COMPLETO Y CORRECTO
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,9 +21,9 @@ model Product {
   mas_vendido Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  
   cartItems   CartItem[]
-
+  
   @@map("products")
 }
 
@@ -33,7 +32,7 @@ model Cart {
   items     CartItem[]
   sessionId String    @unique
   createdAt DateTime  @default(now())
-
+  
   @@map("carts")
 }
 
@@ -44,7 +43,7 @@ model CartItem {
   product   Product @relation(fields: [productId], onDelete: Cascade, references: [id])
   productId Int
   quantity  Int     @default(1)
-
+  
   @@unique([cartId, productId])
   @@map("cart_items")
 }
@@ -56,6 +55,6 @@ model VoiceOrder {
   phone         String
   status        String   @default("PENDIENTE")
   createdAt     DateTime @default(now())
-
+  
   @@map("voice_orders")
 }
