@@ -1,30 +1,36 @@
+// src/components/CartIcon.tsx
 "use client";
 import Link from "next/link";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
+import { useCart } from "@/hooks/useCart";
 
 export default function CartIcon() {
-  const [count, setCount] = useState(0);
+  const { items } = useCart();
+  const [mounted, setMounted] = useState(false);
 
-  // ACTUALIZA EL CONTADOR CADA VEZ QUE CAMBIE EL CARRITO
+  // Solo mostrar después de montar en el cliente
   useEffect(() => {
-    const update = () => setCount(JSON.parse(localStorage.getItem("cart") || "[]").length);
-    update();
-    window.addEventListener("storage", update);
-    window.addEventListener("cartUpdated", update);
-    return () => {
-      window.removeEventListener("storage", update);
-      window.removeEventListener("cartUpdated", update);
-    };
+    setMounted(true);
   }, []);
+
+  if (!mounted) {
+    return (
+      <Link href="/checkout">
+        <div className="fixed bottom-6 right-6 z-50 bg-orange-500 rounded-full p-4">
+          <ShoppingCartIcon className="h-6 w-6 text-white" />
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link href="/checkout">
-      <div className="fixed bottom-6 right-6 z-50 neon rounded-full p-4 animate-bounce hover:animate-ping cursor-pointer">
-        <ShoppingCartIcon className="h-10 w-10 text-white" />
-        {count > 0 && (
-          <span className="absolute -top-2 -right-2 bg-fire-red text-white text-xs font-bold rounded-full h-7 w-7 flex items-center justify-center animate-pulse">
-            {count}
+      <div className="fixed bottom-6 right-6 z-50 bg-orange-500 rounded-full p-4 animate-bounce hover:animate-ping cursor-pointer">
+        <ShoppingCartIcon className="h-6 w-6 text-white" />
+        {items.length > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center animate-pulse">
+            {items.length}
           </span>
         )}
       </div>

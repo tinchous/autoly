@@ -1,14 +1,45 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+// prisma/seed.ts
+import { PrismaClient } from '@prisma/client'
+import { PRODUCTS } from '../src/data/products'
 
-const data = [
-  { nombre: "TARTA DE ATUN", categoria: "ROTISERIA", subcategoria: "TARTAS", precio: 110, imagen: "/products/tarta-atun.png", oferta: true, nuevo: true, mas_vendido: true },
-  { nombre: "MILANESA DE POLLO", categoria: "ROTISERIA", subcategoria: "MILANESAS", precio: 170, imagen: "/products/milanesa-pollo.png", oferta: true, nuevo: true, mas_vendido: true },
-  // PEGÁ AQUÍ LOS OTROS 198 DEL SHEET (Ctrl+C → Ctrl+V)
-];
+const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.product.createMany({ data, skipDuplicates: true });
-  console.log("¡200 PRODUCTOS NEÓN EN NEON!");
+  console.log('🌱 Seeding database...')
+
+  // Limpiar tablas existentes
+  await prisma.cartItem.deleteMany()
+  await prisma.cart.deleteMany()
+  await prisma.voiceOrder.deleteMany()
+  await prisma.product.deleteMany()
+
+  // Crear productos
+  for (const product of PRODUCTS) {
+    await prisma.product.create({
+      data: {
+        id: product.id,
+        nombre: product.nombre,
+        descripcion: product.descripcion,
+        precio: product.precio,
+        imagen: product.imagen,
+        categoria: product.categoria,
+        subcategoria: product.subcategoria,
+        stock: product.stock || 100,
+        oferta: product.oferta || false,
+        nuevo: product.nuevo || true,
+        mas_vendido: product.mas_vendido || false
+      }
+    })
+  }
+
+  console.log(`✅ ${PRODUCTS.length} productos creados!`)
 }
-main();
+
+main()
+  .catch((e) => {
+    console.error('❌ Error seeding:', e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

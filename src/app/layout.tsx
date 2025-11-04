@@ -1,11 +1,11 @@
+// src/app/layout.tsx - VERSIÓN FINAL
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import CartIcon from "@/components/CartIcon";
+import ClientProvider from "@/providers/ClientProvider";
 
 export const metadata: Metadata = {
-  title: "AutoService Liam-Yahir",
-  description: "Delivery 08:00-23:30 | Gratis > $1499",
+  title: "Autoly - Delivery",
+  description: "Delivery rápido",
 };
 
 export default function RootLayout({
@@ -14,11 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="bg-black text-white">
-      <body className="font-sans min-h-screen">
-        <Navbar />
-        {children}
-        <CartIcon />
+    <html lang="es" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <ClientProvider>
+          {children}
+        </ClientProvider>
       </body>
     </html>
   );

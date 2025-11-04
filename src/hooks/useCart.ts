@@ -1,6 +1,6 @@
 // src/hooks/useCart.ts
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface CartItem {
   id: number;
@@ -27,11 +27,11 @@ export const useCart = create<CartStore>()(
       add: (product) => {
         const { items } = get();
         const existing = items.find(item => item.id === product.id);
-
+        
         if (existing) {
           set({
             items: items.map(item =>
-              item.id === product.id
+              item.id === product.id 
                 ? { ...item, qty: item.qty + 1 }
                 : item
             )
@@ -39,8 +39,7 @@ export const useCart = create<CartStore>()(
         } else {
           set({ items: [...items, { ...product, qty: 1 }] });
         }
-
-        // Disparar evento para actualizar iconos
+        
         window.dispatchEvent(new Event('cartUpdated'));
       },
       remove: (id) => {
@@ -73,7 +72,18 @@ export const useCart = create<CartStore>()(
       }
     }),
     {
-      name: 'cart-storage',
+      name: 'autoly-cart',
+      storage: createJSONStorage(() => {
+        // Solo usar localStorage en el cliente
+        if (typeof window !== 'undefined') {
+          return localStorage;
+        }
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {}
+        };
+      }),
     }
   )
 );
