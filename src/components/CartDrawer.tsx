@@ -3,7 +3,7 @@ import { useCart } from "@/hooks/useCart";
 import Link from "next/link";
 
 export default function CartDrawer() {
-  const { items, total, clear, updateQty } = useCart();
+  const { items, total, clear, updateQty } = useCart() as any;
 
   return (
     <div className="fixed right-0 top-0 h-full w-96 bg-black neon p-6 z-50 overflow-y-auto">
